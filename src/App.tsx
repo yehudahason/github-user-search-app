@@ -1,9 +1,6 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Footer from "./Footer";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-const octocat = "https://avatars.githubusercontent.com/u/583231?v=4";
 
 type GithubUser = {
   name: string;
@@ -32,6 +29,20 @@ export default function App() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
+  function formatDate(str: string | null) {
+    if (!str) return;
+    const date = new Date(str);
+
+    const formatted = new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+
+    // console.log(formatted);
+    return formatted;
+  }
   async function fetchUser(username: string) {
     const res = await fetch(`https://api.github.com/users/${username}`);
 
@@ -39,7 +50,9 @@ export default function App() {
       throw new Error("User not found");
     }
 
-    return res.json();
+    const data = await res.json();
+    console.log(data);
+    return data;
   }
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,6 +104,7 @@ export default function App() {
   }, [dark]);
 
   if (loading) return <h1>Loaiding</h1>;
+
   return (
     <>
       <header></header>
@@ -117,7 +131,6 @@ export default function App() {
               </span>
             </button>
           </header>
-
           {/* Search */}
           <form
             onSubmit={handleSearch}
@@ -144,111 +157,130 @@ export default function App() {
               Search
             </button>
           </form>
+          {error ? (
+            <div className="rounded-[20px] bg-white px-6 py-12 text-center shadow-[0_15px_30px_rgba(70,96,160,0.15)] sm:px-8 sm:py-16">
+              <h2 className="text-preset-2 text-neutral-700">
+                No results found!
+              </h2>
 
-          {/* Profile */}
-          <section className="rounded-[15px] bg-white px-6.25 py-7.5 shadow-[0_15px_30px_rgba(70,96,160,0.1)] sm:rounded-[20px] sm:px-8.75 sm:py-11.25 lg:px-12.5 lg:pb-12.5">
-            <div className="block gap-10 sm:flex sm:gap-6.25 lg:gap-10">
-              {/* Avatar */}
-              <img
-                src={octocat}
-                alt="The Octocat"
-                className="mb-5 h-20 w-20 shrink-0 rounded-full object-cover sm:mb-0 sm:h-30 sm:w-30"
-              />
+              <p className="text-preset-4 mx-auto mt-5 max-w-[700px] text-neutral-300">
+                We couldn&apos;t find any GitHub users matching your search.
+                Please double-check the username and try again.
+              </p>
+            </div>
+          ) : (
+            <section className="rounded-[15px] bg-white px-6.25 py-7.5 shadow-[0_15px_30px_rgba(70,96,160,0.1)] sm:rounded-[20px] sm:px-8.75 sm:py-11.25 lg:px-12.5 lg:pb-12.5">
+              <div className="block gap-10 sm:flex sm:gap-6.25 lg:gap-10">
+                {/* Avatar */}
+                <img
+                  src={data?.avatar_url}
+                  alt="The Octocat"
+                  className="mb-5 h-20 w-20 shrink-0 rounded-full object-cover sm:mb-0 sm:h-30 sm:w-30"
+                />
 
-              <div className="min-w-0 flex-1">
-                {/* Name */}
-                <div className="flex flex-col items-start justify-between gap-1.25 sm:flex-row sm:gap-5">
-                  <div>
-                    <h2 className="m-0 text-[22px] font-bold leading-tight text-[#2b3442] sm:text-[30px]">
-                      {data?.name}
-                    </h2>
+                <div className="min-w-0 flex-1">
+                  {/* Name */}
+                  <div className="flex flex-col items-start justify-between gap-1.25 sm:flex-row sm:gap-5">
+                    <div>
+                      <h2 className="m-0 text-[22px] font-bold leading-tight text-[#2b3442] sm:text-[30px]">
+                        {data?.name}
+                      </h2>
 
-                    <a
-                      href="https://github.com/octocat"
-                      className="text-sm text-[#087cff] no-underline sm:text-base"
-                    >
-                      @octocat
-                    </a>
-                  </div>
+                      <a
+                        href={`https://github.com/${data?.login}`}
+                        className="text-sm text-[#087cff] no-underline sm:text-base"
+                      >
+                        @{data?.login}
+                      </a>
+                    </div>
 
-                  <span className="whitespace-nowrap text-xs text-[#60779e] sm:pt-1.5 sm:text-[15px]">
-                    Joined 25 Jan 2011
-                  </span>
-                </div>
-
-                {/* Bio */}
-                <p className="my-6.25 text-[13px] text-[#8ca2c4] sm:my-9 sm:mb-7.5 sm:text-base">
-                  This profile has no bio
-                </p>
-
-                {/* Stats */}
-                <div className="mb-6.25 grid grid-cols-3 rounded-[13px] bg-[#f6f8ff] px-3.75 py-5 sm:mb-7.5 sm:px-10 sm:py-5.5">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
-                      Repos
+                    <span className="whitespace-nowrap text-xs text-[#60779e] sm:pt-1.5 sm:text-[15px]">
+                      Joined{" "}
+                      {data?.created_at ? formatDate(data.created_at) : ""}
                     </span>
-
-                    <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
-                      8
-                    </strong>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
-                      Followers
-                    </span>
+                  {/* Bio */}
+                  <p className="my-6.25 text-[13px] text-[#8ca2c4] sm:my-9 sm:mb-7.5 sm:text-base">
+                    {data?.bio ? data.bio : "This profile has no bio"}
+                  </p>
 
-                    <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
-                      5958
-                    </strong>
+                  {/* Stats */}
+                  <div className="mb-6.25 grid grid-cols-3 rounded-[13px] bg-[#f6f8ff] px-3.75 py-5 sm:mb-7.5 sm:px-10 sm:py-5.5">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
+                        Repos
+                      </span>
+
+                      <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
+                        {data?.public_repos}
+                      </strong>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
+                        Followers
+                      </span>
+
+                      <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
+                        {data?.followers}
+                      </strong>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
+                        Following
+                      </span>
+
+                      <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
+                        {data?.following}
+                      </strong>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-2">
-                    <span className="text-center text-[11px] text-[#6680aa] sm:text-left sm:text-sm">
-                      Following
-                    </span>
+                  {/* Information */}
+                  <div className="grid grid-cols-1 gap-y-4.5 sm:grid-cols-2 sm:gap-x-8.75 sm:gap-y-5">
+                    <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                      <img src={`${baseUrl}/assets/icon-location.svg`} alt="" />
+                      <span>
+                        {data?.location ? data.location : "Not Available"}
+                      </span>
+                    </div>
 
-                    <strong className="text-center text-xl leading-none text-[#293344] sm:text-left sm:text-[25px]">
-                      9
-                    </strong>
-                  </div>
-                </div>
+                    <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                      <img src={`${baseUrl}/assets/icon-twitter.svg`} alt="" />
+                      <span>
+                        {" "}
+                        {data?.twitter_username
+                          ? data.twitter_username
+                          : "Not Available"}
+                      </span>
+                    </div>
 
-                {/* Information */}
-                <div className="grid grid-cols-1 gap-y-4.5 sm:grid-cols-2 sm:gap-x-8.75 sm:gap-y-5">
-                  <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
-                    <img src={`${baseUrl}/assets/icon-location.svg`} alt="" />
-                    <span>San Francisco</span>
-                  </div>
+                    <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                      <img src={`${baseUrl}/assets/icon-website.svg`} alt="" />
+                      <a
+                        href="https://github.blog"
+                        className="truncate text-[#60779e] no-underline hover:underline"
+                      >
+                        {data?.blog ? data.blog : "Not Available"}
+                      </a>
+                    </div>
 
-                  <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
-                    <img src={`${baseUrl}/assets/icon-twitter.svg`} alt="" />
-                    <span>Not Available</span>
-                  </div>
-
-                  <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
-                    <img src={`${baseUrl}/assets/icon-website.svg`} alt="" />
-                    <a
-                      href="https://github.blog"
-                      className="truncate text-[#60779e] no-underline hover:underline"
-                    >
-                      https://github.blog
-                    </a>
-                  </div>
-
-                  <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
-                    <img src={`${baseUrl}assets/icon-company.svg`} alt="" />
-                    <a
-                      href="https://github.com"
-                      className="truncate text-[#60779e] no-underline hover:underline"
-                    >
-                      @github
-                    </a>
+                    <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                      <img src={`${baseUrl}assets/icon-company.svg`} alt="" />
+                      <a
+                        href="https://github.com"
+                        className="truncate text-[#60779e] no-underline hover:underline"
+                      >
+                        {data?.company ? data.company : "Not Available"}
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
         </div>
       </main>
 
