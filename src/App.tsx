@@ -147,7 +147,7 @@ export default function App() {
             onSubmit={handleSearch}
             role="search"
             aria-label="GitHub User Search"
-            className="mb-6.25 flex h-17.5 items-center justify-between rounded-[15px] bg-white p-1.75 shadow-[0_15px_30px_rgba(70,96,160,0.1)] dark:bg-neutral-900 sm:mb-12.5 sm:h-22 sm:rounded-[20px] sm:p-2.5"
+            className="mb-6.25 flex h-17.5 items-center justify-between rounded-[15px] border border-transparent bg-white p-1.75 shadow-[0_15px_30px_rgba(70,96,160,0.1)] transition-colors focus-within:border-[#087cff] dark:bg-neutral-900 sm:mb-12.5 sm:h-22 sm:rounded-[20px] sm:p-2.5"
           >
             <div className="flex min-w-0 flex-1 items-center">
               <span
@@ -216,7 +216,7 @@ export default function App() {
                           target="_blank"
                           rel="noreferrer"
                           aria-label={`@${data.login} on GitHub (opens in a new tab)`}
-                          className="text-preset-4  text-[#087cff] no-underline hover:underline sm:text-base"
+                          className="text-preset-4 text-[#087cff] no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] sm:text-base"
                         >
                           @{data.login}
                         </a>
@@ -234,7 +234,7 @@ export default function App() {
 
                     {/* Bio */}
                     <p
-                      className={`${data.bio ? "dark:text-neutral-100" : " dark:text-neutral-300"}   my-6.25 text-[13px] text-neutral-700 sm:my-9 sm:mb-7.5 sm:text-preset-6 `}
+                      className={`${data.bio ? "dark:text-neutral-100" : " dark:text-neutral-300"}   my-6.25 text-[13px] text-neutral-700 sm:my-9 sm:mb-7.5 sm:text-preset-4 `}
                     >
                       {data.bio ? data.bio : "This profile has no bio"}
                     </p>
@@ -278,10 +278,10 @@ export default function App() {
                           src={`${baseUrl}/assets/icon-location.svg`}
                           alt=""
                           aria-hidden="true"
-                          className={`${dark ? " brightness-0 invert" : ""}`}
+                          className={`${dark ? " brightness-0 invert" : "brightness-0 saturate-100 invert-[20%] sepia-[40%] saturate-[1200%] hue-rotate-[10deg] brightness-[75%] contrast-[100%]"}`}
                         />
                         <span
-                          className={`${data.location ? "" : "dark:text-neutral-300"}`}
+                          className={`${data.location ? "text-gray-700 dark:text-gray-100 " : "dark:text-neutral-300"}`}
                         >
                           {data.location || "Not Available"}
                         </span>
@@ -294,10 +294,10 @@ export default function App() {
                           src={`${baseUrl}/assets/icon-twitter.svg`}
                           alt=""
                           aria-hidden="true"
-                          className={`${dark ? " brightness-0 invert" : ""}`}
+                          className={`${dark ? " brightness-0 invert" : "brightness-0 saturate-100 invert-[20%] sepia-[40%] saturate-[1200%] hue-rotate-[10deg] brightness-[75%] contrast-[100%]"}`}
                         />
                         <span
-                          className={`${data.twitter_username ? "" : "dark:text-neutral-300"}`}
+                          className={`${data.twitter_username ? "text-gray-700 dark:text-gray-100 " : "dark:text-neutral-300"}`}
                         >
                           {data.twitter_username || "Not Available"}
                         </span>
@@ -309,7 +309,7 @@ export default function App() {
                         <img
                           src={`${baseUrl}/assets/icon-website.svg`}
                           alt=""
-                          className={`${dark ? " brightness-0 invert" : ""}`}
+                          className={`${dark ? " brightness-0 invert" : "brightness-0 saturate-100 invert-[20%] sepia-[40%] saturate-[1200%] hue-rotate-[10deg] brightness-[75%] contrast-[100%]"}`}
                           aria-hidden="true"
                         />
                         {data.blog ? (
@@ -322,7 +322,7 @@ export default function App() {
                             target="_blank"
                             rel="noreferrer"
                             aria-label={`Personal website: ${data.blog} (opens in a new tab)`}
-                            className="truncate text-[#60779e] no-underline hover:underline dark:text-neutral-100"
+                            className="truncate text-gray-700  no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] dark:text-neutral-100"
                           >
                             {data.blog}
                           </a>
@@ -339,7 +339,7 @@ export default function App() {
                         <img
                           src={`${baseUrl}/assets/icon-company.svg`}
                           alt=""
-                          className={`${dark ? " brightness-0 invert" : ""}`}
+                          className={`${dark ? " brightness-0 invert" : "brightness-0 saturate-100 invert-[20%] sepia-[40%] saturate-[1200%] hue-rotate-[10deg] brightness-[75%] contrast-[100%]"}`}
                           aria-hidden="true"
                         />
                         {data.company ? (
@@ -348,7 +348,7 @@ export default function App() {
                             target="_blank"
                             rel="noreferrer"
                             aria-label={`Company: ${data.company} on GitHub (opens in a new tab)`}
-                            className="truncate text-[#60779e] no-underline hover:underline dark:text-neutral-100"
+                            className="truncate text-gray-700 no-underline hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] dark:text-neutral-100"
                           >
                             {data.company}
                           </a>
