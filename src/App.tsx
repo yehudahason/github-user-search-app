@@ -147,7 +147,7 @@ export default function App() {
             onSubmit={handleSearch}
             role="search"
             aria-label="GitHub User Search"
-            className="mb-6.25 flex h-17.5 items-center justify-between rounded-[15px] border border-transparent bg-white p-1.75 shadow-[0_15px_30px_rgba(70,96,160,0.1)] transition-colors focus-within:border-[#087cff] dark:bg-neutral-900 sm:mb-12.5 sm:h-22 sm:rounded-[20px] sm:p-2.5"
+            className="border border-gray-300 dark:border-gray-600 mb-6.25 flex h-17.5 items-center justify-between rounded-[15px] bg-white p-1.75 shadow-sm transition-colors focus-within:border-[#087cff] dark:bg-neutral-900 sm:mb-12.5 sm:h-22 sm:rounded-[20px] sm:p-2.5"
           >
             <div className="flex min-w-0 flex-1 items-center">
               <span
@@ -166,13 +166,16 @@ export default function App() {
                 placeholder="Search GitHub username..."
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full min-w-0 border-0 bg-transparent text-[13px] text-neutral-700 outline-none placeholder:text-[#58719c] dark:text-white sm:text-lg"
+                className="w-full min-w-0 border-0 bg-transparent text-[13px] text-neutral-700 outline-none placeholder:text-gray-600 
+
+                dark:placeholder:text-gray-300
+                dark:text-white sm:text-lg"
               />
             </div>
 
             <button
               type="submit"
-              className="cursor-pointer h-14 shrink-0 rounded-xl bg-[#087cff] px-4 text-sm font-bold text-white transition hover:bg-[#0068df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] sm:h-15 sm:rounded-[15px] sm:px-7.5 sm:text-lg"
+              className="cursor-pointer h-14 shrink-0 rounded-xl bg-[#087cff] px-4 text-preset-5 text-white transition hover:bg-[#0068df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] sm:h-15 sm:rounded-[15px] sm:px-7.5 sm:text-lg"
             >
               Search
             </button>
@@ -193,7 +196,7 @@ export default function App() {
             ) : data ? (
               <article
                 aria-label={`GitHub profile details for ${data.name || data.login}`}
-                className="rounded-[15px] bg-white px-6.25 py-7.5 shadow-[0_15px_30px_rgba(70,96,160,0.1)] dark:bg-neutral-900 sm:rounded-[20px] sm:px-8.75 sm:py-11.25 lg:px-12.5 lg:pb-12.5"
+                className="border border-gray-300 dark:border-gray-600   rounded-[15px] bg-white px-6.25 py-7.5 shadow-sm dark:bg-neutral-900 sm:rounded-[20px] sm:px-8.75 sm:py-11.25 lg:px-12.5 lg:pb-12.5"
               >
                 <div className="block gap-10 sm:flex sm:gap-6.25 lg:gap-10">
                   {/* Avatar */}
@@ -240,7 +243,7 @@ export default function App() {
                     </p>
 
                     {/* Key-Value Statistics */}
-                    <dl className="mb-6.25 grid grid-cols-1  gap-4  sm:grid-cols-3 rounded-[13px] bg-[#f6f8ff]  py-5 dark:bg-neutral-800 sm:mb-7.5 px-10 sm:py-5.5">
+                    <dl className="mb-6.25 grid grid-cols-1  gap-4  sm:grid-cols-3 rounded-[13px] bg-gray-100  py-5 dark:bg-neutral-800 sm:mb-7.5 px-10 sm:py-5.5">
                       <div className="flex flex-col gap-2">
                         <dt className=" text-preset-7 text-neutral-700 dark:text-neutral-100 text-left sm:text-sm">
                           Repos
