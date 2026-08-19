@@ -172,7 +172,7 @@ export default function App() {
 
             <button
               type="submit"
-              className="h-14 shrink-0 rounded-xl bg-[#087cff] px-4 text-sm font-bold text-white transition hover:bg-[#0068df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] sm:h-15 sm:rounded-[15px] sm:px-7.5 sm:text-lg"
+              className="cursor-pointer h-14 shrink-0 rounded-xl bg-[#087cff] px-4 text-sm font-bold text-white transition hover:bg-[#0068df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#087cff] sm:h-15 sm:rounded-[15px] sm:px-7.5 sm:text-lg"
             >
               Search
             </button>
