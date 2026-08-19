@@ -1,35 +1,101 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Footer from "./Footer";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const octocat = "https://avatars.githubusercontent.com/u/583231?v=4";
 
+type GithubUser = {
+  name: string;
+  login: string;
+  avatar_url: string;
+  bio: string | null;
+  public_repos: number;
+  followers: number;
+  following: number;
+  location: string | null;
+  twitter_username: string | null;
+  blog: string;
+  company: string | null;
+  created_at: string;
+};
+
 export default function App() {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState<string>("Octocat");
+  const [data, setData] = useState<GithubUser | null>(null);
+  const [error, setError] = useState<string>("");
   const baseUrl = import.meta.env.BASE_URL;
 
   const [dark, setDark] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
 
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function fetchUser(username: string) {
+    const res = await fetch(`https://api.github.com/users/${username}`);
+
+    if (!res.ok) {
+      throw new Error("User not found");
+    }
+
+    return res.json();
+  }
+
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const value = username.replace(/\s/g, "");
+
+    if (!value) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const user = await fetchUser(value);
+      setData(user);
+    } catch (e) {
+      setData(null);
+
+      if (e instanceof Error) {
+        setError(e.message);
+      }
+    } finally {
+      setLoading(false);
+      setUsername("");
+    }
+  };
+
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
+    async function loadUser() {
+      setLoading(true);
+
+      try {
+        const user = await fetchUser("octocat");
+        setData(user);
+      } catch (e) {
+        if (e instanceof Error) {
+          setError(e.message);
+        }
+      } finally {
+        setLoading(false);
+        setUsername("");
+      }
+    }
+
+    loadUser();
+  }, []);
+  useEffect(() => {
+    document.body.classList.toggle("dark", dark);
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!username.trim()) return;
-
-    console.log("Search:", username);
-  };
-
+  if (loading) return <h1>Loaiding</h1>;
   return (
     <>
       <header></header>
 
-      <main className="min-h-screen bg-[#f6f8ff] px-5 py-7.5 font-mono text-[#2b3442] sm:px-6 sm:py-10 lg:py-20">
+      <main className="min-h-screen dark:bg-neutral-800 bg-[#f6f8ff] px-5 py-7.5 font-mono text-[#2b3442] sm:px-6 sm:py-10 lg:py-20">
         <div className="mx-auto w-full max-w-4xl">
           {/* Header */}
           <header className="mb-7.5 flex items-center justify-between sm:mb-8.75">
@@ -94,7 +160,7 @@ export default function App() {
                 <div className="flex flex-col items-start justify-between gap-1.25 sm:flex-row sm:gap-5">
                   <div>
                     <h2 className="m-0 text-[22px] font-bold leading-tight text-[#2b3442] sm:text-[30px]">
-                      The Octocat
+                      {data?.name}
                     </h2>
 
                     <a
@@ -161,6 +227,7 @@ export default function App() {
                   </div>
 
                   <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                    <img src={`${baseUrl}/assets/icon-website.svg`} alt="" />
                     <a
                       href="https://github.blog"
                       className="truncate text-[#60779e] no-underline hover:underline"
@@ -170,6 +237,7 @@ export default function App() {
                   </div>
 
                   <div className="flex min-w-0 items-center gap-3.75 text-[13px] text-[#60779e] sm:text-[15px]">
+                    <img src={`${baseUrl}assets/icon-company.svg`} alt="" />
                     <a
                       href="https://github.com"
                       className="truncate text-[#60779e] no-underline hover:underline"
