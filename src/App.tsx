@@ -52,7 +52,8 @@ export default function App() {
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const value = username.replace(/\s/g, "");
+    let value = username.replace(/\s/g, "");
+    value = value.trim();
 
     if (!value) return;
 
