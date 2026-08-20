@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-bg  dark:bg-neutral-800">
+    <footer className=" dark:bg-neutral-800">
       <div className="attribution">
         Challenge by
         <a
