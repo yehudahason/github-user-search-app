@@ -8,7 +8,7 @@ This is a solution to the [GitHub user search app challenge on Frontend Mentor](
 
 ### Links
 
-- My Solution: [here](https://yehudahason.github.io/github-user-search-app/)
+- My Live Solution: [Here](https://yehudahason.github.io/github-user-search-app/)
 
 ### Built with
 
